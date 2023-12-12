@@ -16,13 +16,13 @@ class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInte
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
+	
 	AAuraCharacterBase();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 protected:
-	// Called when the game starts or when spawned
+	
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
