@@ -36,7 +36,4 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TObjectPtr<USpringArmComponent> SpringArm;
-
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	TObjectPtr<AAuraPlayerState> AuraPlayerState;
 };
