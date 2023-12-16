@@ -14,3 +14,7 @@ void UAuraWidgetController::SetWidgetControllerParams(const FWidgetControllerPar
 	AbilitySystemComponent = WCParams.AbilitySystemComponent;
 	PlayerState = WCParams.PlayerState;
 }
+
+void UAuraWidgetController::BindCallbacksToDependencies()
+{
+}

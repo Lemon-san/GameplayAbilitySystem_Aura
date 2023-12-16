@@ -29,6 +29,9 @@ protected:
 
 private:
 
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	bool bIsMana = false;
+
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> Mesh;
 

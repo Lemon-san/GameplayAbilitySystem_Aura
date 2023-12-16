@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UI/WidgetController/AuraWidgetController.h"
+#include "GameplayEffectTypes.h"
 #include "OverlayWidgetController.generated.h"
 
 
@@ -23,7 +24,7 @@ class AURA_API UOverlayWidgetController : public UAuraWidgetController
 public:
 
 	virtual void BroadcastInitialValues() override;
-
+	virtual void BindCallbacksToDependencies() override;
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes");
 	FOnHealthChangeSignature OnHealthChanged;
@@ -37,4 +38,10 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes");
 	FOnMaxManaChangeSignature OnMaxManaChanged;
 	
+protected:
+
+	void HealthChanged(const FOnAttributeChangeData& Data) const;
+	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;
+	void ManaChanged(const FOnAttributeChangeData& Data) const;
+	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
 };
