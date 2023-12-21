@@ -29,7 +29,7 @@ public:
 
 private:
 
-	void InitAbilityActorInfo();
+	virtual void InitAbilityActorInfo() override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TObjectPtr<UCameraComponent> Camera;
