@@ -34,8 +34,8 @@ private:
 
 	void CursorTrace();
 
-	TObjectPtr<IEnemyInterface> LastActor;
-	TObjectPtr<IEnemyInterface> CurrentActor;
+	IEnemyInterface* LastActor;
+	IEnemyInterface* CurrentActor;
 
 	UPROPERTY(EditAnywhere, Category = "Inputs")
 	TObjectPtr<UInputMappingContext> AuraContext;

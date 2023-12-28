@@ -9,8 +9,7 @@
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
-	InitHealth(50.f);
-	InitMana(20.f);
+
 }
 
 //Register Variables for replication BOILERPLATE
@@ -36,14 +35,9 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, HealthRegen, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, ManaRegen, COND_None, REPNOTIFY_Always);
 
-
 	//VitalAttributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Health, COND_None, REPNOTIFY_Always);
-	
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Mana, COND_None, REPNOTIFY_Always);
-	
-
-	
 	
 }
 
