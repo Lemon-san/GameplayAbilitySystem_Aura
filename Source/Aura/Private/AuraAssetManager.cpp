@@ -1,7 +1,8 @@
 // Copyright Jose Sotomayor
 
-#include "AuraGameplayTags.h"
 #include "AuraAssetManager.h"
+#include "AuraGameplayTags.h"
+
 
 UAuraAssetManager& UAuraAssetManager::Get()
 {
