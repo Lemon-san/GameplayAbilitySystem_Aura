@@ -13,6 +13,7 @@
 class UAbilitySystemComponent;
 class UAttributeSet;
 class UGameplayEffect;
+class UGameplayAbility;
 
 UCLASS(Abstract)
 class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
@@ -35,6 +36,8 @@ protected:
 
 	void InitializeAttributes() const;
 
+	void AddCharacterAbilities();
+
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
@@ -52,6 +55,13 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, CAtegory = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+
+	
+
+private:
+
+	UPROPERTY(EditAnywhere, CAtegory = "Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 
 public:
 

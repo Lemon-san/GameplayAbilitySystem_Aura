@@ -4,6 +4,8 @@
 #include "Character/AuraCharacterBase.h"
 #include "AbilitySystemComponent.h"
 #include "GameplayEffect.h"
+#include "Abilities/GameplayAbility.h"
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
 
 
 // Sets default values
@@ -32,6 +34,15 @@ void AAuraCharacterBase::InitAbilityActorInfo()
 {
 }
 
+void AAuraCharacterBase::AddCharacterAbilities()
+{
+	UAuraAbilitySystemComponent* AuraAbilitySystemComponent = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
+	if (!HasAuthority()) return;
+
+	AuraAbilitySystemComponent->AddCharacterAbilities(StartupAbilities);
+
+
+}
 
 void AAuraCharacterBase::InitializeAttributes() const
 {
@@ -39,6 +50,8 @@ void AAuraCharacterBase::InitializeAttributes() const
 	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f);
 	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
 }
+
+
 
 void AAuraCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> Attributes, float Level) const
 {
