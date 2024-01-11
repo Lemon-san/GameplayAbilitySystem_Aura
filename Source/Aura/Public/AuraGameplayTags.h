@@ -44,6 +44,7 @@ public:
 	FGameplayTag InputTag_4;
 
 
+
 private:
 	static FAuraGameplayTags GameplayTags;
 
