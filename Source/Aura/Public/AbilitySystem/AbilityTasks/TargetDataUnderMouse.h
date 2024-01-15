@@ -30,4 +30,5 @@ private:
 
 	void SendMouseCursorData();
 	
+	void OnTargetDataReplicatedCallBack(const FGameplayAbilityTargetDataHandle& DataHandle, FGameplayTag ActivationTag);
 };
