@@ -34,7 +34,7 @@ protected:
 
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> Attributes, float Level) const;
 
-	void InitializeAttributes() const;
+	void virtual InitializeAttributes() const;
 
 	void AddCharacterAbilities();
 
