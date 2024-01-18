@@ -31,16 +31,30 @@ public:
 	virtual int32 GetPlayerLevel() override;
 	/**End CombatInterface */
 
+	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangeSignature OnHealthChanged;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangeSignature OnMaxHealthChanged;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	bool bHitReacting = false;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	float BaseWalkSpeed = 250.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	float EnemyDeathLifeSpan = 5.f;
+
+	virtual void Die() override;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void InitAbilityActorInfo() override; 
 	void virtual InitializeAttributes() const override;
+	
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults")
