@@ -8,6 +8,8 @@
 #include <AbilitySystemBlueprintLibrary.h>
 #include <AuraGameplayTags.h>
 #include <Interaction/CombatInterface.h>
+#include <Kismet/GameplayStatics.h>
+#include <Player/AuraPlayerController.h>
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -125,7 +127,8 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 				Props.TargetAbilitySystemComponent->TryActivateAbilitiesByTag(TagContainers);
 			}
 			
-			
+			ShowFloatingText(Props, LocalIncomingDamage);
+		
 
 		}
 
@@ -134,6 +137,22 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	
 		
 }
+
+void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Damage) const
+{
+	if (Props.SourceCharacter != Props.TargetCharacter)
+	{
+		AAuraPlayerController* AuraPC = Cast<AAuraPlayerController>(UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0));
+
+		if (AuraPC)
+		{
+			AuraPC->ShowDamageNumber(Damage, Props.TargetCharacter);
+		}
+	}
+
+
+}
+
 
 void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props)
 {
@@ -173,6 +192,8 @@ void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 	}
 
 }
+
+
 
 //Sets Replication, allows to access old variable BOILERPLATE
 void UAuraAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const
