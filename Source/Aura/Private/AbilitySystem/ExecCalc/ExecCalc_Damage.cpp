@@ -8,6 +8,7 @@
 #include <AbilitySystem/Data/CharacterClassInfo.h>
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include <Interaction/CombatInterface.h>
+#include <AuraAbilityTypes.h>
 
 struct AuraDamageStatics
 {
@@ -48,6 +49,7 @@ UExecCalc_Damage::UExecCalc_Damage()
 
 void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
 {
+	//Boiler Plate
 	const UAbilitySystemComponent* SourceASC = ExecutionParams.GetSourceAbilitySystemComponent();
 	const UAbilitySystemComponent* TargetASC = ExecutionParams.GetTargetAbilitySystemComponent();
 
@@ -65,8 +67,16 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	EvaluationParameters.SourceTags = SourceTags;
 	EvaluationParameters.TargetTags = TargetTags;
 
+	FGameplayEffectContextHandle EffectContextHandle = EffectSpec.GetContext();
+
 	//Get Damage Set by Caller Magnitude
-	float Damage = EffectSpec.GetSetByCallerMagnitude(FAuraGameplayTags::Get().Damage);
+	float Damage = 0.f;
+
+	for (const TPair<FGameplayTag,FGameplayTag>& PairTag : FAuraGameplayTags::Get().DamageTypesToResistances)
+	{
+		const float DamageTypeValue = EffectSpec.GetSetByCallerMagnitude(PairTag.Key);
+		Damage += DamageTypeValue;
+	}
 
 	//Capture BlockChance on Target and Determine if there was a successful block
 	float TargetBlockChance = 0;
@@ -75,6 +85,8 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 
 	//if Block, half the damage
 	const bool bBlocked = FMath::RandRange(1, 100) < TargetBlockChance;
+	UAuraAbilitySystemLibrary::SetIsBlockedHit(EffectContextHandle, bBlocked);
+
 	Damage = bBlocked ? Damage * 0.5f : Damage;
 
 	//Target Armor
@@ -125,6 +137,8 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 
 	//is it a critical hit? update damage
 	bool bCritical = FMath::RandRange(1, 100) < EffectiveCritChance;
+	UAuraAbilitySystemLibrary::SetisCriticalHit(EffectContextHandle, bCritical);
+
 	Damage = bCritical ? (Damage * 2.0f) + SourceCriticalHitDamage : Damage;
 
 
