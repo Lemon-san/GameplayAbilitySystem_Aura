@@ -18,4 +18,10 @@ protected:
 
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "AI Key Selectors")
+	FBlackboardKeySelector TargetToFollowSelector;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "AI Key Selectors")
+	FBlackboardKeySelector DistanceToTargetSelector;
+
 };
