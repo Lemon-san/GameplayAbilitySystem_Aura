@@ -69,6 +69,16 @@ int32 AAuraEnemy::GetPlayerLevel()
 	return Level;
 }
 
+void AAuraEnemy::SetCombatTarget_Implementation(AActor* InCombatTarget)
+{
+	CombatTarget = InCombatTarget;
+}
+
+AActor* AAuraEnemy::GetCombatTarget_Implementation() const
+{
+	return CombatTarget;
+}
+
 
 
 void AAuraEnemy::Die()
@@ -85,7 +95,7 @@ void AAuraEnemy::BeginPlay()
 
 	if (HasAuthority())
 	{
-		UAuraAbilitySystemLibrary::GiveStartupAbbilities(this, AbilitySystemComponent);
+		UAuraAbilitySystemLibrary::GiveStartupAbbilities(this, AbilitySystemComponent, CharacterClass);
 	}
 
 	UAuraUserWidget* AuraUserWidget = CastChecked<UAuraUserWidget>(HealthBar->GetUserWidgetObject());

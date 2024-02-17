@@ -61,6 +61,8 @@ public:
 	//HitReact Tags
 	FGameplayTag Effects_HitReact;
 
+	//Attack Tags
+	FGameplayTag Abilities_Attack;
 
 
 private:

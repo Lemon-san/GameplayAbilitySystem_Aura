@@ -33,6 +33,8 @@ public:
 
 	/** Combat Interface*/
 	virtual int32 GetPlayerLevel() override;
+	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
+	virtual AActor* GetCombatTarget_Implementation() const override;
 	/**End CombatInterface */
 
 	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
@@ -52,14 +54,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	float EnemyDeathLifeSpan = 5.f;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Combat")
+	TObjectPtr<AActor> CombatTarget;
+
 	virtual void Die() override;
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void InitAbilityActorInfo() override; 
 	void virtual InitializeAttributes() const override;
-	
-
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults")
 	int32 Level = 1;
