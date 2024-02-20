@@ -25,14 +25,19 @@ public:
 	
 	AAuraCharacterBase();
 
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void MulticastHandleDeath();
+
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 
+	/*Combat Interface*/
 	virtual void Die() override;
-
-	UFUNCTION(NetMulticast, Reliable)
-	virtual void MulticastHandleDeath();
+	virtual FVector GetCombatSocketLocation_Implementation() override;
+	virtual bool IsDead_Implementation() const override;
+	virtual AActor* GetAvatar_Implementation() override;
+	/*End of Combat Interface*/
 
 protected:
 	
@@ -46,7 +51,7 @@ protected:
 
 	void AddCharacterAbilities();
 
-	virtual FVector GetCombatSocketLocation() override;
+	bool bDead = false;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
