@@ -8,6 +8,7 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Aura/Aura.h"
+#include "AuraGameplayTags.h"
 
 
 // Sets default values
@@ -63,6 +64,11 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 }
 
 
+TArray<FTaggedMontage> AAuraCharacterBase::GetAttackMontages_Implementation()
+{
+	return AttackMontages;
+}
+
 void AAuraCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
@@ -82,10 +88,28 @@ void AAuraCharacterBase::AddCharacterAbilities()
 
 }
 
-FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation()
+FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag)
 {
-	check(Weapon);
-	return Weapon->GetSocketLocation(WeaponTipSocketName);
+	//TODO return correct socket based on montage tag (could do a TMAP)
+
+	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
+
+	if (MontageTag.MatchesTagExact(FAuraGameplayTags::Get().Montage_Attack_Weapon) && IsValid(Weapon))
+	{
+		return Weapon->GetSocketLocation(WeaponTipSocketName);
+	}
+	
+	if (MontageTag.MatchesTagExact(FAuraGameplayTags::Get().Montage_Attack_RightHand) && IsValid(GetMesh()))
+	{
+		return GetMesh()->GetSocketLocation(RightHandTipSocketName);
+	}
+
+	if (MontageTag.MatchesTagExact(FAuraGameplayTags::Get().Montage_Attack_LeftHand) && IsValid(GetMesh()))
+	{
+		return GetMesh()->GetSocketLocation(LeftHandTipSocketName);
+	}
+
+	return FVector();
 }
 
 bool AAuraCharacterBase::IsDead_Implementation() const
