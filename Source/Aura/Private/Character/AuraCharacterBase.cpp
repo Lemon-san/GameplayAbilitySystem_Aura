@@ -127,10 +127,18 @@ void AAuraCharacterBase::Dissolve()
 	UMaterialInstanceDynamic* MeshDynamicMatInst;
 	UMaterialInstanceDynamic* WeaponDynamicMatInst;
 
-	DissolveMaterial(MeshDissolveMaterialInstance, GetMesh(), MeshDynamicMatInst);
-	StartMeshDissolveTimeline(MeshDynamicMatInst);
-	DissolveMaterial(WeaponDissolveMaterialInstance, Weapon, WeaponDynamicMatInst);
-	StartWeaponDissolveTimeline(WeaponDynamicMatInst);
+	if (MeshDissolveMaterialInstance)
+	{
+		DissolveMaterial(MeshDissolveMaterialInstance, GetMesh(), MeshDynamicMatInst);
+		StartMeshDissolveTimeline(MeshDynamicMatInst);
+	}
+	
+
+	if (Weapon && WeaponDissolveMaterialInstance)
+	{
+		DissolveMaterial(WeaponDissolveMaterialInstance, Weapon, WeaponDynamicMatInst);
+		StartWeaponDissolveTimeline(WeaponDynamicMatInst);
+	}	
 }
 
 void AAuraCharacterBase::DissolveMaterial(UMaterialInstance* MaterialInstance, USkeletalMeshComponent* SkeletalMeshComponent, UMaterialInstanceDynamic*& DynamicMatInst)
