@@ -84,6 +84,11 @@ AActor* AAuraEnemy::GetCombatTarget_Implementation() const
 void AAuraEnemy::Die()
 {
 	SetLifeSpan(EnemyDeathLifeSpan);
+	if (AuraAIController)
+	{
+		AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("isDead"), true);
+	}
+	
 	Super::Die();
 }
 
