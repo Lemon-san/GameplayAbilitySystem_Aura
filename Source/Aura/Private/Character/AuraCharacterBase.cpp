@@ -9,6 +9,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Aura/Aura.h"
 #include "AuraGameplayTags.h"
+#include <Kismet/GameplayStatics.h>
 
 
 // Sets default values
@@ -46,6 +47,11 @@ void AAuraCharacterBase::Die()
 
 void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 {
+	if (DeathSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation());
+	}
+
 	Weapon->SetSimulatePhysics(true);
 	Weapon->SetEnableGravity(true);
 	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
@@ -94,17 +100,17 @@ FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGamepl
 
 	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
 
-	if (MontageTag.MatchesTagExact(FAuraGameplayTags::Get().Montage_Attack_Weapon) && IsValid(Weapon))
+	if (MontageTag.MatchesTagExact(FAuraGameplayTags::Get().CombatSocket_Weapon) && IsValid(Weapon))
 	{
 		return Weapon->GetSocketLocation(WeaponTipSocketName);
 	}
 	
-	if (MontageTag.MatchesTagExact(FAuraGameplayTags::Get().Montage_Attack_RightHand) && IsValid(GetMesh()))
+	if (MontageTag.MatchesTagExact(FAuraGameplayTags::Get().CombatSocket_RightHand) && IsValid(GetMesh()))
 	{
 		return GetMesh()->GetSocketLocation(RightHandTipSocketName);
 	}
 
-	if (MontageTag.MatchesTagExact(FAuraGameplayTags::Get().Montage_Attack_LeftHand) && IsValid(GetMesh()))
+	if (MontageTag.MatchesTagExact(FAuraGameplayTags::Get().CombatSocket_LeftHand) && IsValid(GetMesh()))
 	{
 		return GetMesh()->GetSocketLocation(LeftHandTipSocketName);
 	}
@@ -120,6 +126,25 @@ bool AAuraCharacterBase::IsDead_Implementation() const
 AActor* AAuraCharacterBase::GetAvatar_Implementation()
 {
 	return this;
+}
+
+UNiagaraSystem* AAuraCharacterBase::GetBloodEffect_Implementation()
+{
+	return BloodEffect;
+}
+
+FTaggedMontage AAuraCharacterBase::GetTaggedMontageByTag_Implementation(const FGameplayTag& MontageTag)
+{
+
+	for (FTaggedMontage TaggedMontage : AttackMontages)
+	{
+		if (TaggedMontage.MontageTag == MontageTag)
+		{
+			return TaggedMontage;
+		}
+	}
+
+	return FTaggedMontage();
 }
 
 void AAuraCharacterBase::Dissolve()
