@@ -73,6 +73,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	FName LeftHandTipSocketName;
 
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName TailSocketName;
+
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
