@@ -20,9 +20,19 @@ TArray<FVector> UAuraSummonAbility::GetSpawnLocation()
 	for (int32 i = 0; i < NumMinions; i++)
 	{
 		const FVector Direction = LeftOfSpread.RotateAngleAxis(DeltaSpread * i + DeltaAdjust, FVector::UpVector);
-		const FVector ChosenSpawnLocation = Location + Direction * FMath::FRandRange(MinSpawnDistance, MaxSpawnDistance);
+		FVector ChosenSpawnLocation = Location + Direction * FMath::FRandRange(MinSpawnDistance, MaxSpawnDistance);
 
-		DrawDebugSphere(GetWorld(), ChosenSpawnLocation, 15.f, 12.f, FColor::Cyan, false, 3.f);
+		FHitResult Hit;
+		GetWorld()->LineTraceSingleByChannel(Hit, ChosenSpawnLocation + FVector(0.f, 0.f, 400.f), ChosenSpawnLocation - FVector(0.f, 0.f, 400.f), ECollisionChannel::ECC_Visibility);
+
+		if (Hit.bBlockingHit)
+		{
+			ChosenSpawnLocation = Hit.ImpactPoint;
+		}
+
+			//DrawDebugSphere(GetWorld(), ChosenSpawnLocation, 15.f, 12.f, FColor::Cyan, false, 3.f);
+
+			
 
 		SpawnLocations.Add(ChosenSpawnLocation);
 
@@ -47,4 +57,11 @@ TArray<FVector> UAuraSummonAbility::GetSpawnLocation()
 	//DrawDebugSphere(GetWorld(), Location + LeftOfSpread * MaxSpawnDistance, 15.f, 12.f, FColor::Red, false, 3.f);
 	
 	return SpawnLocations;
+}
+
+TSubclassOf<APawn> UAuraSummonAbility::GetRandomMinionClass()
+{
+	const int32 Selection = FMath::RandRange(0, MinionClasses.Num() - 1);
+
+	return MinionClasses[Selection];
 }
