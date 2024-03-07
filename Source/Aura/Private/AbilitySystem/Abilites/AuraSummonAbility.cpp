@@ -36,9 +36,9 @@ TArray<FVector> UAuraSummonAbility::GetSpawnLocation()
 
 		SpawnLocations.Add(ChosenSpawnLocation);
 
-		UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), Location, Location + Direction * MaxSpawnDistance, 4.f, FLinearColor::Blue, 3.f);
-		DrawDebugSphere(GetWorld(), Location + Direction * MinSpawnDistance, 8.f, 12.f, FColor::Red, false, 3.f);
-		DrawDebugSphere(GetWorld(), Location + Direction * MaxSpawnDistance, 8.f, 12.f, FColor::Red, false, 3.f);
+		//UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), Location, Location + Direction * MaxSpawnDistance, 4.f, FLinearColor::Blue, 3.f);
+		//DrawDebugSphere(GetWorld(), Location + Direction * MinSpawnDistance, 8.f, 12.f, FColor::Red, false, 3.f);
+		//DrawDebugSphere(GetWorld(), Location + Direction * MaxSpawnDistance, 8.f, 12.f, FColor::Red, false, 3.f);
 
 		
 	}
@@ -46,12 +46,12 @@ TArray<FVector> UAuraSummonAbility::GetSpawnLocation()
 	
 	//const FVector LeftOfSpread = Forward.RotateAngleAxis(-SpawnSpread / 2.f, FVector::UpVector);
 
-	UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), Location, Location + LeftOfSpread * MaxSpawnDistance, 4.f, FLinearColor::Yellow, 3.f);
+	//UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), Location, Location + LeftOfSpread * MaxSpawnDistance, 4.f, FLinearColor::Yellow, 3.f);
 
 	//DrawDebugSphere(GetWorld(), Location + RightOfSpread * MinSpawnDistance, 15.f, 12.f, FColor::Red, false, 3.f);
 	//DrawDebugSphere(GetWorld(), Location + RightOfSpread * MaxSpawnDistance, 15.f, 12.f, FColor::Red, false, 3.f);
 	
-	UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), Location, Location + RightOfSpread * MaxSpawnDistance, 4.f, FLinearColor::Yellow, 3.f);
+	//UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), Location, Location + RightOfSpread * MaxSpawnDistance, 4.f, FLinearColor::Yellow, 3.f);
 
 	//DrawDebugSphere(GetWorld(), Location + LeftOfSpread * MinSpawnDistance, 15.f, 12.f, FColor::Red, false, 3.f);
 	//DrawDebugSphere(GetWorld(), Location + LeftOfSpread * MaxSpawnDistance, 15.f, 12.f, FColor::Red, false, 3.f);
