@@ -9,6 +9,9 @@
 
 
 class UAuraUserWidget;
+class UAbilityInfo;
+class UAuraAbilitySystemComponent;
+struct FAuraAbilityInfo;
 
 USTRUCT(BlueprintType)
 struct FUIWidgetRow : public FTableRowBase
@@ -33,7 +36,7 @@ struct FUIWidgetRow : public FTableRowBase
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangeSignature, float, Attribute);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityInfoSignature, const FAuraAbilityInfo&, Info);
 
 /**
  * 
@@ -48,20 +51,23 @@ public:
 	virtual void BroadcastInitialValues() override;
 	virtual void BindCallbacksToDependencies() override;
 
-	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes");
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
 	FOnAttributeChangeSignature OnHealthChanged;
 
-	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes");
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
 	FOnAttributeChangeSignature OnMaxHealthChanged;
 
-	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes");
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
 	FOnAttributeChangeSignature OnManaChanged;
 
-	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes");
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
 	FOnAttributeChangeSignature OnMaxManaChanged;
 
-	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages");
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
 	FMessageWidgetRowSignature MessageWidgetRowDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Abilities")
+	FAbilityInfoSignature AbilityInfoDelegate;
 	
 protected:
 
@@ -71,6 +77,12 @@ protected:
 
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
+	TObjectPtr<UAbilityInfo> AbilityInfo;
+
+	UFUNCTION()
+	void OnInitializeStartupAbilities(UAuraAbilitySystemComponent* ASC);
 };
 
 template<typename T>

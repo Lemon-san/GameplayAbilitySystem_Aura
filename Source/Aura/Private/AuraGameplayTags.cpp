@@ -121,7 +121,9 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 		FName("Damage.Physical"),
 		FString("Physical Damage Type"));
 
-	//Resistance Tags
+	/*
+	*Resistance Tags
+	*/
 
 	GameplayTags.Attributes_Resistance_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Attributes.Resitance.Fire"),
@@ -139,19 +141,28 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 		FName("Attributes.Resitance.Physical"),
 		FString("Resistance to Physical Type"));
 
-	//Map of Damage Types to Resistances
+	/*
+	*Map of Damage Types to Resistances
+	*/
 
 	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Fire, GameplayTags.Attributes_Resistance_Fire);
 	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Lightning, GameplayTags.Attributes_Resistance_Lightning);
 	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Arcane, GameplayTags.Attributes_Resistance_Arcane);
 	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Physical, GameplayTags.Attributes_Resistance_Physical);
 
-	//Effects and HitReact Tags
+	/*
+	*Effects and HitReact Tags
+	*/
+
 	GameplayTags.Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Effects.HitReact"),
 		FString("Hit React Tag"));
 
-	//Attack Tags
+	
+	/*
+	*AttackTags
+	*/
+
 	GameplayTags.Abilities_Attack = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Abilities.Attack"),
 		FString("Attack Ability Tag"));
@@ -160,7 +171,17 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 		FName("Abilities.Summon"),
 		FString("Summon Ability Tag"));
 
-	//Montage Socket Tags
+	/*
+	SpellTags
+	*/
+
+	GameplayTags.Abilities_Fire_FireBolt = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Fire.Firebolt"),
+		FString("Ability Tag"));
+
+	/*
+	*Montage Socket Tags
+	*/
 	GameplayTags.CombatSocket_Weapon = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("CombatSocket.Weapon"),
 		FString("Weapon Montage Socket Tag"));
@@ -178,7 +199,9 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 		FString("Tail Montage Socket Tag"));
 
 
-	//Montage Attack Tags
+	/*
+	Montage Attack Tags
+	*/
 
 	GameplayTags.Montage_Attack_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Montage_Attack_1"),

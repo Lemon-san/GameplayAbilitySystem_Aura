@@ -65,6 +65,9 @@ public:
 	FGameplayTag Abilities_Attack;
 	FGameplayTag Abilities_Summon;
 
+	//Spell Tags
+	FGameplayTag Abilities_Fire_FireBolt;
+
 	//Montage Socket Tags
 	FGameplayTag CombatSocket_Weapon;
 	FGameplayTag CombatSocket_RightHand;

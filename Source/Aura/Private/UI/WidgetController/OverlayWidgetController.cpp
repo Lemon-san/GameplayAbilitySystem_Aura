@@ -4,6 +4,8 @@
 #include "UI/WidgetController/OverlayWidgetController.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "AbilitySystem/Data/AbilityInfo.h"
+
 
 
 void UOverlayWidgetController::BroadcastInitialValues()
@@ -47,8 +49,22 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 				OnMaxManaChanged.Broadcast(Data.NewValue);
 			});
 
+	
+
 	//Broadcasted Tags from the AuraAbilitySystemComponent
 	UAuraAbilitySystemComponent* AuraAbilitySystemComponent = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent);
+	if (!AuraAbilitySystemComponent) return;
+
+	if (AuraAbilitySystemComponent->bStartupAbilitiesGiven)
+	{
+		OnInitializeStartupAbilities(AuraAbilitySystemComponent);
+	}
+
+	else
+	{
+		AuraAbilitySystemComponent->AbilitiesGivenDelegate.AddUObject(this, &UOverlayWidgetController::OnInitializeStartupAbilities);
+	}
+	
 	AuraAbilitySystemComponent->EffectAssetTags.AddLambda(
 		[this](const FGameplayTagContainer& AssetTags)
 		{
@@ -59,13 +75,36 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 				//Message.HealthPotion.MatchesTag(Message) returns true, Message.MatchesTag(Message.HealthPotion) returns false
 
 				FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag(FName("Message"));
-				
+
 				if (Tag.MatchesTag(MessageTag))
 				{
 					const FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
 					MessageWidgetRowDelegate.Broadcast(*Row);
 				}
 			}
-			
+
 		});
+}
+
+void UOverlayWidgetController::OnInitializeStartupAbilities(UAuraAbilitySystemComponent* ASC)
+{
+	// TODO: Get information about all given abilities, look up their ability info and broadcast it to widgets.
+
+	if (!ASC->bStartupAbilitiesGiven) return;
+
+	FForEachAbility BroadcastDelegate;
+
+	//Can Be Replaced to a Function pointer
+	BroadcastDelegate.BindLambda([this, ASC](const FGameplayAbilitySpec& AbilitySpec)
+		{
+			//TODO need a way to figure out the ability tag for a given ability spec.
+			FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(ASC->GetAbilityTagFromSpec(AbilitySpec));
+			Info.InputTag = ASC->GetInputTagFromSpec(AbilitySpec);
+
+			AbilityInfoDelegate.Broadcast(Info);
+
+		});
+
+	ASC->ForEachAbility(BroadcastDelegate);
+
 }
