@@ -68,6 +68,9 @@ public:
 	//Spell Tags
 	FGameplayTag Abilities_Fire_FireBolt;
 
+	//Cooldown Tags
+	FGameplayTag Cooldown_Fire_Firebolt;
+
 	//Montage Socket Tags
 	FGameplayTag CombatSocket_Weapon;
 	FGameplayTag CombatSocket_RightHand;
