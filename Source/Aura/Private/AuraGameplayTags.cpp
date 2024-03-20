@@ -213,18 +213,31 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 	*/
 
 	GameplayTags.Montage_Attack_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Montage_Attack_1"),
+		FName("Montage.Attack.1"),
 		FString("Montage Attack"));
 
 	GameplayTags.Montage_Attack_2 = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Montage_Attack_2"),
+		FName("Montage.Attack.2"),
 		FString("Montage Attack"));
 
 	GameplayTags.Montage_Attack_3 = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Montage_Attack_3"),
+		FName("Montage.Attack.3"),
 		FString("Montage Attack"));
 
 	GameplayTags.Montage_Attack_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Montage_Attack_4"),
+		FName("Montage.Attack.4"),
 		FString("Montage Attack"));
+
+	GameplayTags.Montage_Summon_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Montage.Summon.1"),
+		FString("Montage Summon"));
+
+
+	/*
+	Attributes Meta XP Tags
+	*/
+
+	GameplayTags.Attributes_Meta_IncomingXP = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Meta.IncomingXP"),
+		FString("Incoming Meta Attribute XP Tag"));
 }

@@ -17,6 +17,9 @@ public:
 	static const FAuraGameplayTags& Get() { return GameplayTags; }
 	static void InitializeNativeGameplayTags();
 
+	//Attributes XP Tags
+	FGameplayTag Attributes_Meta_IncomingXP;
+
 	//PrimaryAttribute Tags
 	FGameplayTag Attributes_Primary_Strength;
 	FGameplayTag Attributes_Primary_Intelligence;
@@ -82,6 +85,9 @@ public:
 	FGameplayTag Montage_Attack_2;
 	FGameplayTag Montage_Attack_3;
 	FGameplayTag Montage_Attack_4;
+	FGameplayTag Montage_Summon_1;
+
+	
 
 private:
 	static FAuraGameplayTags GameplayTags;

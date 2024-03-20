@@ -11,6 +11,8 @@
 #include <Kismet/GameplayStatics.h>
 #include <Player/AuraPlayerController.h>
 #include <AbilitySystem/AuraAbilitySystemLibrary.h>
+#include "Aura/AuraLogChannels.h"
+#include "Interaction/PlayerInterface.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -130,7 +132,10 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 				if (CombatInterface)
 				{
 					CombatInterface->Die();
+					SendXPEvent(Props);
+					
 				}
+				
 			}
 
 			else
@@ -149,6 +154,21 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		}
 
 	
+	}
+
+	if (Data.EvaluatedData.Attribute == GetIncomingXPAttribute())
+	{
+		//Common practice is to store the meta attribute in a local variable and then set it to 0.f first
+		const float LocalIncomingXP = GetIncomingXP();
+		SetIncomingXP(0.f);
+
+		//TODO: SEE IF WE SHOULD LEVEL UP
+
+		if (Props.SourceCharacter->Implements<UPlayerInterface>())
+		{
+			IPlayerInterface::Execute_AddToXP(Props.SourceCharacter, LocalIncomingXP);
+		}
+		
 	}
 	
 		
@@ -173,6 +193,26 @@ void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, float D
 	}
 
 
+}
+
+void UAuraAttributeSet::SendXPEvent(const FEffectProperties& Props)
+{
+	ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetCharacter);
+
+	if (CombatInterface)
+	{
+		const int32 TargetLevel = CombatInterface->GetPlayerLevel();
+		const ECharacterClass TargetClass = ICombatInterface::Execute_GetCharacterClass(Props.TargetCharacter);
+
+		const int32 XPReward = UAuraAbilitySystemLibrary::GetXPRewardForClassAndLevel(Props.TargetCharacter, TargetClass, TargetLevel);
+		const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
+
+		FGameplayEventData Payload;
+		Payload.EventTag = GameplayTags.Attributes_Meta_IncomingXP;
+		Payload.EventMagnitude = XPReward;
+
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Props.SourceCharacter, GameplayTags.Attributes_Meta_IncomingXP, Payload);
+	}
 }
 
 

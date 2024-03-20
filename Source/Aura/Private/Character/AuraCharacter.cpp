@@ -31,6 +31,8 @@ AAuraCharacter::AAuraCharacter()
 	SpringArm->bInheritRoll = false;
 	SpringArm->bInheritYaw = false;
 
+	CharacterClass = ECharacterClass::Elementalist;
+
 }
 
 void AAuraCharacter::PossessedBy(AController* NewController)
@@ -53,6 +55,14 @@ int32 AAuraCharacter::GetPlayerLevel()
 	check(AuraPlayerState);
 
 	return AuraPlayerState->GetPlayerLevel();
+}
+
+void AAuraCharacter::AddToXP_Implementation(int32 InXP)
+{
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+
+	AuraPlayerState->AddToXP(InXP);
 }
 
 void AAuraCharacter::InitAbilityActorInfo()

@@ -7,6 +7,7 @@
 #include "AbilitySystemInterface.h"
 #include "GameplayEffectComponent.h"
 #include "Interaction/CombatInterface.h"
+#include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "AuraCharacterBase.generated.h"
 
 
@@ -42,6 +43,7 @@ public:
 	virtual FTaggedMontage GetTaggedMontageByTag_Implementation(const FGameplayTag& MontageTag) override;
 	virtual int32 GetMinionCount_Implementation() override;
 	virtual void AddToMinionCount_Implementation(int32 Amount) override;
+	virtual ECharacterClass GetCharacterClass_Implementation() override;
 	/*End of Combat Interface*/
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
@@ -62,6 +64,9 @@ protected:
 	void AddCharacterAbilities();
 
 	bool bDead = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults")
+	ECharacterClass CharacterClass = ECharacterClass::Elementalist;
 
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
@@ -128,6 +133,9 @@ private:
 
 	UPROPERTY(EditAnywhere, CAtegory = "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+
+	UPROPERTY(EditAnywhere, CAtegory = "Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartupPassiveAbilities;
 
 	UPROPERTY(EditAnywhere, CAtegory = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
