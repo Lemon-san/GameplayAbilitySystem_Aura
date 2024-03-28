@@ -36,8 +36,14 @@ public:
 	void AddToXP(int32 InXP);
 	void SetXP(int32 InXP);
 
+	void AddToAttributePoints(int32 InAttributePoints);
+
+	void AddToSpellPoints(int32 InSpellPoints);
+
 	FOnPlayerStatChange OnXPChangedDelegate;
 	FOnPlayerStatChange OnLevelChangeDelegate;
+	FOnPlayerStatChange OnAttributePointChangeDelegate;
+	FOnPlayerStatChange OnSpellPointChangeDelegate;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<ULevelUpInfo> LevelUpInfo;
@@ -58,11 +64,23 @@ private:
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_XP, Category = "Level")
 	int32 XP = 1;
 
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_AttributePoints, Category = "Level")
+	int32 AttributePoints = 0;
+
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_SpellPoints, Category = "Level")
+	int32 SpellPoints = 1;
+
 	UFUNCTION()
 	void OnRep_Level(const int32& OldLevel) const;
 
 	UFUNCTION()
 	void OnRep_XP(const int32& OldXP) const;
+
+	UFUNCTION()
+	void OnRep_AttributePoints(const int32& OldAttributePoints) const;
+
+	UFUNCTION()
+	void OnRep_SpellPoints(const int32& OldSpellPoints) const;
 
 
 public:
@@ -70,4 +88,6 @@ public:
 	FORCEINLINE UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 	FORCEINLINE int32 GetPlayerLevel() const { return Level; }
 	FORCEINLINE int32 GetPlayerXP() const { return XP; }
+	FORCEINLINE int32 GetAttributePoints() const { return AttributePoints; }
+	FORCEINLINE int32 GetSpellPoints() const { return SpellPoints; }
 };
