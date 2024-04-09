@@ -17,6 +17,8 @@ public:
 	static const FAuraGameplayTags& Get() { return GameplayTags; }
 	static void InitializeNativeGameplayTags();
 
+
+
 	//Attributes XP Tags
 	FGameplayTag Attributes_Meta_IncomingXP;
 
@@ -65,6 +67,9 @@ public:
 
 	//HitReact Tags
 	FGameplayTag Effects_HitReact;
+
+	//Abilities Nullptr Tag
+	FGameplayTag Abilities_None;
 
 	//Attack Tags
 	FGameplayTag Abilities_Attack;
