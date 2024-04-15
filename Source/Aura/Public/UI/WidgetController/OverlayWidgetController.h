@@ -82,9 +82,10 @@ protected:
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
 
-	
-
 	void OnXPChange(int32 NewXP);
+
+	UFUNCTION(BlueprintCallable)
+	void OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, const FGameplayTag& SlotTag, const FGameplayTag& PreviousSlotTag) const;
 };
 
 template<typename T>

@@ -6,6 +6,8 @@
 #include "AbilitySystem/AuraAttributeSet.h"
 #include <Player/AuraPlayerState.h>
 #include "AbilitySystem/Data/LevelUpInfo.h"
+#include "AuraGameplayTags.h"
+#include "AbilitySystem/Data/AbilityInfo.h"
 
 
 
@@ -61,6 +63,8 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 	
 	if (!GetAuraASC()) return;
 
+	GetAuraASC()->AbilityEquipDelegate.AddUObject(this, &UOverlayWidgetController::OnAbilityEquipped);
+
 	if (GetAuraASC()->bStartupAbilitiesGiven)
 	{
 		BroadcastAbilityInfo();
@@ -112,4 +116,24 @@ void UOverlayWidgetController::OnXPChange(int32 NewXP)
 
 		OnXPPercentChangedDelegate.Broadcast(XPBarPercent);
 	}
+}
+
+void UOverlayWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, const FGameplayTag& SlotTag, const FGameplayTag& PreviousSlotTag) const
+{
+
+	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
+
+	//Clears out the old slot
+	FAuraAbilityInfo LastSlotInfo;
+	LastSlotInfo.StatusTag = GameplayTags.Abilities_Status_Unlocked;
+	LastSlotInfo.InputTag = PreviousSlotTag;
+	LastSlotInfo.AbilityTag = GameplayTags.Abilities_None;
+	//Broadcast Empty Info if previousSLot is a valid slot. Only if equipping an already equipped spell
+	AbilityInfoDelegate.Broadcast(LastSlotInfo);
+
+	//Fills in the new slot
+	FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
+	Info.StatusTag = StatusTag;
+	Info.InputTag = SlotTag;
+	AbilityInfoDelegate.Broadcast(Info);
 }
