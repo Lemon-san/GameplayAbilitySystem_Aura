@@ -81,7 +81,7 @@ AActor* AAuraEnemy::GetCombatTarget_Implementation() const
 
 
 
-void AAuraEnemy::Die()
+void AAuraEnemy::Die(const FVector& DeathImpulse)
 {
 	SetLifeSpan(EnemyDeathLifeSpan);
 	if (AuraAIController)
@@ -89,7 +89,7 @@ void AAuraEnemy::Die()
 		AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("isDead"), true);
 	}
 	
-	Super::Die();
+	Super::Die(DeathImpulse);
 }
 
 void AAuraEnemy::BeginPlay()
@@ -154,6 +154,8 @@ void AAuraEnemy::InitAbilityActorInfo()
 	{
 		InitializeAttributes();
 	}
+
+	OnASCRegisteredDelegate.Broadcast(AbilitySystemComponent);
 
 }
 

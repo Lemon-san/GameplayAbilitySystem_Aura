@@ -190,6 +190,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 	//Pointer to the SystemComponent and AttributeSet
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
+	OnASCRegisteredDelegate.Broadcast(AbilitySystemComponent);
 
 	if (AAuraPlayerController* AuraPlayerController = Cast<AAuraPlayerController>(GetController()))
 	{
