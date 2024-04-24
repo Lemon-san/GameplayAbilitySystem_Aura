@@ -15,6 +15,7 @@ struct FInputActionValue;
 class UAuraInputConfig;
 class UAuraAbilitySystemComponent;
 class USplineComponent;
+class UNiagaraSystem;
 
 class UDamageTextComponent;
 /**
@@ -90,5 +91,8 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TSubclassOf<UDamageTextComponent> DamageTextComponentClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Components")
+	TObjectPtr<UNiagaraSystem> ClickNiagaraSystem;
 
 };

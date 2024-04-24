@@ -8,8 +8,8 @@ TArray<FVector> UAuraSummonAbility::GetSpawnLocation()
 {
 	const FVector Forward = GetAvatarActorFromActorInfo()->GetActorForwardVector();
 	const FVector Location = GetAvatarActorFromActorInfo()->GetActorLocation();
-	const float DeltaSpread = SpawnSpread / NumMinions;
-	const float DeltaAdjust = DeltaSpread / 2.f;
+	const float DeltaSpread = SpawnSpread / (NumMinions - 1);
+	//const float DeltaAdjust = DeltaSpread / 2.f;
 
 	const FVector RightOfSpread = Forward.RotateAngleAxis(SpawnSpread / 2.f, FVector::UpVector);
 	const FVector LeftOfSpread = Forward.RotateAngleAxis(-SpawnSpread / 2.f, FVector::UpVector);
@@ -19,7 +19,7 @@ TArray<FVector> UAuraSummonAbility::GetSpawnLocation()
 	
 	for (int32 i = 0; i < NumMinions; i++)
 	{
-		const FVector Direction = LeftOfSpread.RotateAngleAxis(DeltaSpread * i + DeltaAdjust, FVector::UpVector);
+		const FVector Direction = LeftOfSpread.RotateAngleAxis(DeltaSpread * i, FVector::UpVector);
 		FVector ChosenSpawnLocation = Location + Direction * FMath::FRandRange(MinSpawnDistance, MaxSpawnDistance);
 
 		FHitResult Hit;
