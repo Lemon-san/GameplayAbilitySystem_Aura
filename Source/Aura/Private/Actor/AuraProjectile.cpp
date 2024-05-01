@@ -48,6 +48,12 @@ void AAuraProjectile::BeginPlay()
 
 void AAuraProjectile::Destroyed()
 {
+	if (TrailSoundComponent)
+	{
+		TrailSoundComponent->Stop();
+		TrailSoundComponent->DestroyComponent();
+	}
+
 	if (!bHit && !HasAuthority())
 	{
 		OnHit();
@@ -59,7 +65,12 @@ void AAuraProjectile::OnHit()
 {
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-	if (TrailSoundComponent) TrailSoundComponent->Stop();
+	if (TrailSoundComponent)
+	{
+		TrailSoundComponent->Stop();
+		TrailSoundComponent->DestroyComponent();
+	}
+
 	bHit = true;
 }
 

@@ -124,6 +124,12 @@ public:
 	FGameplayTag Montage_Attack_4;
 	FGameplayTag Montage_Summon_1;
 
+	//Player Tags
+	FGameplayTag Player_Block_InputPressed;
+	FGameplayTag Player_Block_InputHeld;
+	FGameplayTag Player_Block_InputReleased;
+	FGameplayTag Player_Block_CursorTrace;
+
 	
 
 private:

@@ -83,6 +83,11 @@ void AAuraPlayerController::ShowDamageNumber_Implementation(float DamageAmount, 
 
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 {
+	if (GetAbilitySystemComponent() && GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputPressed))
+	{
+		return;
+	}
+
 	const FVector2D InputAxisVector = InputActionValue.Get<FVector2D>();
 	
 	//Finds out which direction is forward using controller as base.
@@ -109,6 +114,17 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 void AAuraPlayerController::CursorTrace()
 {
 	
+	if (GetAbilitySystemComponent() && GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_CursorTrace))
+	{
+		if (LastActor) LastActor->UnHighlightActor();
+		if (CurrentActor) CurrentActor->UnHighlightActor();
+	
+		LastActor = nullptr;
+		CurrentActor = nullptr;
+
+		return;
+	}
+
 	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, CursorHit);
 
 	if (!CursorHit.bBlockingHit) return;
@@ -133,16 +149,30 @@ void AAuraPlayerController::CursorTrace()
 
 void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
+	if (GetAbilitySystemComponent() && GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputPressed))
+	{
+		return;
+	}
+
 	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
 		bTargetting = CurrentActor ? true : false;
 		bAutoRunning = false;
+	}
+
+	if (GetAbilitySystemComponent())
+	{
+		GetAbilitySystemComponent()->AbilityInputTagPressed(InputTag);
 	}
 	
 }
 
 void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
+	if (GetAbilitySystemComponent() && GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputReleased))
+	{
+		return;
+	}
 
 	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
@@ -180,7 +210,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 				
 			}
 
-			if (ClickNiagaraSystem)
+			if (ClickNiagaraSystem && GetAbilitySystemComponent() && !GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputPressed))
 			{
 				UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
 			}
@@ -195,6 +225,10 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 
 void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
+	if (GetAbilitySystemComponent() && GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputHeld))
+	{
+		return;
+	}
 
 	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
