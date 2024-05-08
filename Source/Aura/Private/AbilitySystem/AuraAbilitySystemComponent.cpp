@@ -304,11 +304,11 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 			MarkAbilitySpecDirty(*AbilitySpec);
 		}
 
-		ClientEquipAbility(AbilityTag, SlotTag, GameplayTags.Abilities_Status_Equipped, PreviousSlotTag);
+		ClientEquipAbility(AbilityTag, GameplayTags.Abilities_Status_Equipped, SlotTag, PreviousSlotTag);
 	}
 }
 
-void UAuraAbilitySystemComponent::ClientEquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& SlotTag, const FGameplayTag& StatusTag, const FGameplayTag& PreviousSlotTag)
+void UAuraAbilitySystemComponent::ClientEquipAbility_Implementation(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, const FGameplayTag& SlotTag, const FGameplayTag& PreviousSlotTag)
 {
 	AbilityEquipDelegate.Broadcast(AbilityTag, StatusTag, SlotTag, PreviousSlotTag);
 }

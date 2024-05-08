@@ -95,6 +95,7 @@ void USpellMenuWidgetController::SpellRowGlobePressed(const FGameplayTag& SlotTa
 	if (!SelectedAbilityTypeTag.MatchesTagExact(AbilityTypeTag)) return;
 
 	GetAuraASC()->ServerEquipAbility(SelectedAbility.Ability, SlotTag);
+	
 
 }
 

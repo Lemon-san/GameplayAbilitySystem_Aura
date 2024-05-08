@@ -47,6 +47,11 @@ public:
 	virtual int32 GetSpellPoints_Implementation() const override;
 	/**End PlayerInterface*/
 
+	/**Replication for Niagara Components*/
+	virtual void OnRep_Stunned() override;
+	virtual void OnRep_Burned() override;
+	/**End Replication for Niagara Components*/
+
 private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Components")

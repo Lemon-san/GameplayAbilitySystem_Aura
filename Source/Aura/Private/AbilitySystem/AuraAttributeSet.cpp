@@ -165,7 +165,7 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 		else
 		{
 
-			if (!bDebuffStagger)
+			if (!bDebuffStagger && Props.TargetCharacter->Implements<UCombatInterface>() && !ICombatInterface::Execute_IsBeingShocked(Props.TargetCharacter))
 			{
 				FGameplayTagContainer TagContainers;
 				TagContainers.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
@@ -254,8 +254,31 @@ void UAuraAttributeSet::HandleIncomingDebuff(const FEffectProperties& Props)
 	//Depricated: GameplayEffect->InheritableOwnedTagsContainer.AddTag(AuraGameplayTags.DamageTypesToDebuffs[DamageType]);
 	FInheritedTagContainer TagContainer = FInheritedTagContainer();
 	UTargetTagsGameplayEffectComponent& Component = GameplayEffect->FindOrAddComponent<UTargetTagsGameplayEffectComponent>();
-	TagContainer.Added.AddTag(AuraGameplayTags.DamageTypesToDebuffs[DamageType]);
-	TagContainer.CombinedTags.AddTag(AuraGameplayTags.DamageTypesToDebuffs[DamageType]);
+	const FGameplayTag DebuffTag = AuraGameplayTags.DamageTypesToDebuffs[DamageType];
+
+	TagContainer.Added.AddTag(DebuffTag);
+	TagContainer.CombinedTags.AddTag(DebuffTag);
+
+	if (DebuffTag.MatchesTagExact(AuraGameplayTags.Debuff_Stun))
+	{
+		//CursorTrace Block
+		TagContainer.Added.AddTag(AuraGameplayTags.Player_Block_CursorTrace);
+		TagContainer.CombinedTags.AddTag(AuraGameplayTags.Player_Block_CursorTrace);
+
+		//InputHeld Block
+		TagContainer.Added.AddTag(AuraGameplayTags.Player_Block_InputHeld);
+		TagContainer.CombinedTags.AddTag(AuraGameplayTags.Player_Block_InputHeld);
+
+		//InputPress Block
+		TagContainer.Added.AddTag(AuraGameplayTags.Player_Block_InputPressed);
+		TagContainer.CombinedTags.AddTag(AuraGameplayTags.Player_Block_InputPressed);
+
+		//InputReleased Block
+		TagContainer.Added.AddTag(AuraGameplayTags.Player_Block_InputHeld);
+		TagContainer.CombinedTags.AddTag(AuraGameplayTags.Player_Block_InputHeld);
+	}
+
+	//Sets and Applies Changes to Tag Container
 	Component.SetAndApplyTargetTagChanges(TagContainer);
 
 	//Stacking Policy
