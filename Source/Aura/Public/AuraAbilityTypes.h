@@ -62,6 +62,18 @@ struct FDamageEffectParams
 
 	UPROPERTY(BlueprintReadWrite)
 	bool DebuffStagger = false;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsRadialDamage = false;
+
+	UPROPERTY(BlueprintReadWrite)
+	float RadialDamageInnerRadius = 0.f;
+
+	UPROPERTY(BlueprintReadWrite)
+	float RadialDamageOuterRadius = 0.f;
+
+	UPROPERTY(BlueprintReadWrite)
+	FVector RadialDamageOrigin = FVector::ZeroVector;
 };
 
 USTRUCT(BlueprintType)
@@ -126,6 +138,18 @@ protected:
 	UPROPERTY()
 	FVector KnockbackForce = FVector::ZeroVector;
 
+	UPROPERTY()
+	bool bIsRadialDamage = false;
+
+	UPROPERTY()
+	float RadialDamageInnerRadius = 0.f;
+
+	UPROPERTY()
+	float RadialDamageOuterRadius = 0.f;
+
+	UPROPERTY()
+	FVector RadialDamageOrigin = FVector::ZeroVector;
+
 
 public:
 
@@ -139,6 +163,10 @@ public:
 	FORCEINLINE FVector GetDeathImpulse() const { return DeathImpulse; }
 	FORCEINLINE bool IsDebuffStagger() const { return bIsDebuffStagger; }
 	FORCEINLINE FVector GetKnockbackForce() const { return KnockbackForce; }
+	FORCEINLINE bool IsRadialRadamage() const { return bIsRadialDamage; }
+	FORCEINLINE float GetRadialDamageInnerRadius() const { return RadialDamageInnerRadius; }
+	FORCEINLINE float GetRadialDamageOuterRadius() const { return RadialDamageOuterRadius; }
+	FORCEINLINE FVector GetRadialDamageOrigin() const { return RadialDamageOrigin; }
 
 	void SetIsCriticalHit(bool bInIsCriticalHit) { bIsCriticalHit = bInIsCriticalHit; }
 	void SetIsBlocked(bool bInIsBlocked) { bIsBlocked = bInIsBlocked; }
@@ -150,6 +178,10 @@ public:
 	void SetDeathImpulse(FVector NewDeathImpuse) { DeathImpulse = NewDeathImpuse; }
 	void SetIsDebuffStagger(bool bInIsDebuffStagger) { bIsDebuffStagger = bInIsDebuffStagger; }
 	void SetKnockbackForce(FVector NewKnockbackForce) { KnockbackForce = NewKnockbackForce; }
+	void SetIsRadialDamage(bool bNewIsRadialDamage) { bIsRadialDamage = bNewIsRadialDamage; }
+	void SetRadialDamageInnerRadius(float NewRadialDamageInnerRadius) { RadialDamageInnerRadius = NewRadialDamageInnerRadius; }
+	void SetRadialDamageOuterRadius(float NewRadialDamageOuterRadius) { RadialDamageOuterRadius = NewRadialDamageOuterRadius; }
+	void SetRadialDamageOrigin(FVector NewRadialDamageOrigin) { RadialDamageOrigin = NewRadialDamageOrigin; }
 };
 
 //Important to have custom effect context

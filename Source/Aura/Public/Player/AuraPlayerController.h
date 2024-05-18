@@ -16,8 +16,8 @@ class UAuraInputConfig;
 class UAuraAbilitySystemComponent;
 class USplineComponent;
 class UNiagaraSystem;
-
 class UDamageTextComponent;
+class AMagicCircle;
 /**
  * 
  */
@@ -31,6 +31,12 @@ public:
 
 	virtual void SetupInputComponent() override;
 	virtual void PlayerTick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintCallable)
+	void ShowMagicCircle(UMaterialInterface* DecalMaterial = nullptr);
+
+	UFUNCTION(BlueprintCallable)
+	void HideMagicCircle();
 
 	UFUNCTION(Client, Reliable)
 	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter, bool bBlockHit, bool bCriticalHit);
@@ -54,6 +60,7 @@ private:
 	
 	void AutoRun();
 
+	void UpdateMagicCircleLocation();
 
 	UAuraAbilitySystemComponent* GetAbilitySystemComponent();
 
@@ -95,4 +102,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TObjectPtr<UNiagaraSystem> ClickNiagaraSystem;
 
+	UPROPERTY(EditDefaultsOnly, Category = "MagicCircle")
+	TSubclassOf<AMagicCircle> MagicCircleClass;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "MagicCircle")
+	TObjectPtr<AMagicCircle> MagicCircle;
 };

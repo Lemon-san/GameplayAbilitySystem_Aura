@@ -11,9 +11,6 @@
 #include <AbilitySystem/Debuff/DebuffNiagaraComponent.h>
 #include "AuraCharacterBase.generated.h"
 
-
-
-
 class UAbilitySystemComponent;
 class UAttributeSet;
 class UGameplayEffect;
@@ -42,6 +39,8 @@ public:
 
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
 	/*Combat Interface*/
 	virtual void Die(const FVector& DeathImpulse) override;
 	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) override;
@@ -54,13 +53,17 @@ public:
 	virtual ECharacterClass GetCharacterClass_Implementation() override;
 	virtual FOnASCRegisteredSignature& GetOnASCRegisteredDelegate() override;
 	virtual FOnDeathSignature& GetOnDeathDelegate() override;
+	virtual FOnDamageSignature& GetOnDamageDelegate() override;
 	virtual USkeletalMeshComponent* GetWeapon_Implementation() override;
 	virtual void SetIsBeingShocked_Implementation(bool NewIsBeingShocked) override;
 	virtual bool IsBeingShocked_Implementation() const override;
 	/*End of Combat Interface*/
 
+	/*Delegates Start*/
 	FOnASCRegisteredSignature OnASCRegisteredDelegate;
 	FOnDeathSignature OnDeathDelegate;
+	FOnDamageSignature OnDamageDelegate;
+	/*Delegates End*/
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FTaggedMontage> AttackMontages;

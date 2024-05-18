@@ -82,11 +82,31 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 		{
 			RepBits |= 1 << 16;
 		}
+
+		if (bIsRadialDamage)
+		{
+			RepBits |= 1 << 17;
+
+			if (RadialDamageInnerRadius > 0)
+			{
+				RepBits |= 1 << 18;
+			}
+
+			if (RadialDamageOuterRadius > 0)
+			{
+				RepBits |= 1 << 19;
+			}
+
+			if (!RadialDamageOrigin.IsZero())
+			{
+				RepBits |= 1 << 20;
+			}
+		}
 		
 	}
 
 	//Make sure to change the Length of bits depending on how many were added from the above
-	Ar.SerializeBits(&RepBits, 16);
+	Ar.SerializeBits(&RepBits, 20);
 
 	if (RepBits & (1 << 0))
 	{
@@ -185,6 +205,28 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 		KnockbackForce.NetSerialize(Ar, Map, bOutSuccess);
 	}
 
+	if (RepBits & (1 << 17))
+	{
+		Ar << bIsRadialDamage;
+
+		if (RepBits & (1 << 18))
+		{
+			Ar << RadialDamageInnerRadius;
+		}
+
+		if (RepBits & (1 << 19))
+		{
+			Ar << RadialDamageOuterRadius;
+		}
+
+		if (RepBits & (1 << 20))
+		{
+			RadialDamageOrigin.NetSerialize(Ar, Map, bOutSuccess);
+		}
+
+	}
+
+	
 	if (Ar.IsLoading())
 	{
 		AddInstigator(Instigator.Get(), EffectCauser.Get()); // Just to initialize InstigatorAbilitySystemComponent

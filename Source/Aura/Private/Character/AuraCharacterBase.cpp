@@ -76,6 +76,14 @@ UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
 	return HitReactMontage;
 }
 
+float AAuraCharacterBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	const float DamageTaken = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	OnDamageDelegate.Broadcast(DamageTaken);
+
+	return DamageTaken;
+}
+
 void AAuraCharacterBase::Die(const FVector& DeathImpulse)
 {
 	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
@@ -233,6 +241,11 @@ FOnASCRegisteredSignature& AAuraCharacterBase::GetOnASCRegisteredDelegate()
 FOnDeathSignature& AAuraCharacterBase::GetOnDeathDelegate()
 {
 	return OnDeathDelegate;
+}
+
+FOnDamageSignature& AAuraCharacterBase::GetOnDamageDelegate()
+{
+	return OnDamageDelegate;
 }
 
 USkeletalMeshComponent* AAuraCharacterBase::GetWeapon_Implementation()

@@ -14,6 +14,7 @@ class UAbilitySystemComponent;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnASCRegisteredSignature, UAbilitySystemComponent* /*ASC*/);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeathSignature, AActor*, DeadActor);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnDamageSignature, float /*DamageAMount*/);
 
 
 USTRUCT(BlueprintType)
@@ -107,4 +108,5 @@ public:
 
 	virtual FOnASCRegisteredSignature& GetOnASCRegisteredDelegate() = 0;
 	virtual FOnDeathSignature& GetOnDeathDelegate() = 0;
+	virtual FOnDamageSignature& GetOnDamageDelegate() = 0;
 };

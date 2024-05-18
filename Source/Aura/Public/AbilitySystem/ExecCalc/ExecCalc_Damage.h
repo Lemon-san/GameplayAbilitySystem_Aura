@@ -24,7 +24,7 @@ public:
 
 	void FillTagsToCapture(TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition>& TagsToCaptureDef) const;
 
-	void DetermineDamage(FAuraGameplayTags& AuraGameplayTags, const FGameplayEffectSpec& EffectSpec, const FGameplayEffectCustomExecutionParameters& ExecutionParams, FAggregatorEvaluateParameters& EvaluationParameters, const TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition>& TagsToCaptureDef, float& Damage) const;
+	void DetermineDamage(FGameplayEffectContextHandle& EffectContextHandle, AActor*& SourceAvatar, AActor*& TargetAvatar, FAuraGameplayTags& AuraGameplayTags, const FGameplayEffectSpec& EffectSpec, const FGameplayEffectCustomExecutionParameters& ExecutionParams, FAggregatorEvaluateParameters& EvaluationParameters, const TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition>& TagsToCaptureDef, float& Damage) const;
 
 	void DetermineDebuff(FAuraGameplayTags& AuraGameplayTags, const FGameplayEffectSpec& EffectSpec, const FGameplayEffectCustomExecutionParameters& ExecutionParams, FAggregatorEvaluateParameters& EvaluationParameters, const TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition>& TagsToCaptureDef) const;
 	
