@@ -249,6 +249,10 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 		FName("Abilities.Fire.Firebolt"),
 		FString("Firebolt Ability Tag"));
 
+	GameplayTags.Abilities_Fire_FireBlast = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Fire.FireBlast"),
+		FString("FireBlast Ability Tag"));
+
 	GameplayTags.Abilities_Lightning_Electrocute = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Abilities.Lightning.Electrocute"),
 		FString("Electrocute Ability Tag"));
@@ -324,9 +328,19 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 		FName("Cooldown.Fire.Firebolt"),
 		FString("Firebolt Cooldown Tag"));
 
+	GameplayTags.Cooldown_Fire_FireBlast = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Cooldown.Fire.FireBlast"),
+		FString("FireBlast Cooldown Tag"));
+
 	GameplayTags.Cooldown_Lightning_Electrocute = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Cooldown.Lightning.Electrocute"),
 		FString("Electrocute Cooldown Tag"));
+
+	GameplayTags.Cooldown_Arcane_ArcaneShards = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Cooldown.Arcane.ArcaneShards"),
+		FString("Arcane Cooldown Tag"));
+
+	
 
 	/*
 	* Montage Socket Tags

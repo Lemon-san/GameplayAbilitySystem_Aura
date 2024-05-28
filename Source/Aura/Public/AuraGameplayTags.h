@@ -105,8 +105,10 @@ public:
 
 	//Spell Tags
 	FGameplayTag Abilities_Fire_FireBolt;
+	FGameplayTag Abilities_Fire_FireBlast;
 	FGameplayTag Abilities_Lightning_Electrocute;
 	FGameplayTag Abilities_Arcane_ArcaneShards;
+	
 
 	//Passive Spell Tags
 	FGameplayTag Abilities_Passive_HaloOfProtection;
@@ -115,7 +117,10 @@ public:
 
 	//Cooldown Tags
 	FGameplayTag Cooldown_Fire_Firebolt;
+	FGameplayTag Cooldown_Fire_FireBlast;
 	FGameplayTag Cooldown_Lightning_Electrocute;
+	FGameplayTag Cooldown_Arcane_ArcaneShards;
+	
 
 	//Montage Socket Tags
 	FGameplayTag CombatSocket_Weapon;

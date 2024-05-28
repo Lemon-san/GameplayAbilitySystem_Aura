@@ -210,6 +210,10 @@ void UExecCalc_Damage::DetermineDamage(FGameplayEffectContextHandle& EffectConte
 		const FGameplayEffectAttributeCaptureDefinition CaptureDef = TagsToCaptureDef[DamageResistanceTag];
 
 		float DamageTypeValue = EffectSpec.GetSetByCallerMagnitude(PairTag.Key, false);
+		if (DamageTypeValue <= 0)
+		{
+			continue;
+		}
 
 		float Resistance = 0.f;
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(CaptureDef, EvaluationParameters, Resistance);
