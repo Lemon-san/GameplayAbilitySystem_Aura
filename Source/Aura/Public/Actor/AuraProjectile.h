@@ -37,13 +37,23 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;
 
-	void OnHit();
+	bool bHit = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<USphereComponent> Sphere;
+
+	UPROPERTY(VisibleAnywhere, Category = "Sounds")
+	TObjectPtr<UAudioComponent> TrailSoundComponent;
+
+	UFUNCTION(BlueprintCallable)
+	virtual void OnHit();
+
+	bool IsValidOverlap(AActor* OtherActor);
 
 	UFUNCTION()
 	virtual void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TObjectPtr<USphereComponent> Sphere;
+
 
 
 private:
@@ -52,7 +62,7 @@ private:
 	float MaxSpeed = 550.f;
 	float ProjectileGravityScale = 0.f;
 
-	bool bHit = false;
+	
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	TObjectPtr<UNiagaraSystem> ImpactEffect;
 
@@ -62,8 +72,6 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Sounds")
 	TObjectPtr<USoundBase> TrailSound;
 
-	UPROPERTY(VisibleAnywhere, Category = "Sounds")
-	TObjectPtr<UAudioComponent> TrailSoundComponent;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	float LifeSpan = 15.f;
