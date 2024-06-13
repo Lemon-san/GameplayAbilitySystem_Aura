@@ -64,8 +64,8 @@ private:
 
 	UAuraAbilitySystemComponent* GetAbilitySystemComponent();
 
-	IEnemyInterface* LastActor;
-	IEnemyInterface* CurrentActor;
+	TScriptInterface<IEnemyInterface> LastActor;
+	TScriptInterface<IEnemyInterface> CurrentActor;
 	FHitResult CursorHit;
 
 	UPROPERTY(EditAnywhere, Category = "Inputs")
