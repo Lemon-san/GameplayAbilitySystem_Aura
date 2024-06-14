@@ -38,21 +38,22 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SelectSlotButtonPressed(int32 Slot);
 
+	UFUNCTION(BlueprintCallable)
+	void PlayButtonPressed();
+
 	/*Delegates*/
 	UPROPERTY(BlueprintAssignable)
 	FSlotSelectedSignature SlotSelectedDelegate;
 
 	/*Field Notifies*/
-	void SetLoadScreenName(FString NewLoadScreenName);
+	void SetNumLoadSlots(int32 NewLoadSlots);
 
-	FString GetLoadScreenName() const { return LoadScreenName; }
-
-protected:
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter)
-	FString LoadScreenName;
+	int32 GetNumLoadSlots() const { return NumLoadSlots; }
 
 private:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"))
+	int32 NumLoadSlots;
 
 	UPROPERTY()
 	TMap<int32, UMVVM_LoadSlot*> LoadSlots;

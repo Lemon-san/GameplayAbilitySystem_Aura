@@ -22,6 +22,8 @@ class AURA_API AAuraGameModeBase : public AGameModeBase
 
 public:
 
+	void TravelToMap(UMVVM_LoadSlot* Slot);
+
 	UPROPERTY(EditDefaultsOnly, Category = "Maps")
 	TSoftObjectPtr<UWorld> DefaultMap;
 
