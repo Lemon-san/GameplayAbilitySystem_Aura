@@ -144,6 +144,9 @@ public:
 	//Native Gameplay Cue Tags
 	FGameplayTag GameplayCue_FireBlast;
 
+	//Gameplay Listen Tags
+	FGameplayTag Abilities_Passive_ListenForEvent;
+
 private:
 	static FAuraGameplayTags GameplayTags;
 

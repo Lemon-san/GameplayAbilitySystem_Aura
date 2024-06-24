@@ -9,6 +9,7 @@
 
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChange, int32 /*StatValue*/);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnPlayerLevelChangeSignature, int32 /*StatValue*/, bool /*bLevelUp*/);
 
 /**
  * 
@@ -37,11 +38,13 @@ public:
 	void SetXP(int32 InXP);
 
 	void AddToAttributePoints(int32 InAttributePoints);
+	void SetAttributePoints(int32 InAttributePoints);
 
 	void AddToSpellPoints(int32 InSpellPoints);
+	void SetSpellPoints(int32 InSpellPoints);
 
 	FOnPlayerStatChange OnXPChangedDelegate;
-	FOnPlayerStatChange OnLevelChangeDelegate;
+	FOnPlayerLevelChangeSignature OnLevelChangeDelegate;
 	FOnPlayerStatChange OnAttributePointChangeDelegate;
 	FOnPlayerStatChange OnSpellPointChangeDelegate;
 
@@ -62,7 +65,7 @@ private:
 	int32 Level = 1;
 
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_XP, Category = "Level")
-	int32 XP = 1;
+	int32 XP = 0;
 
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_AttributePoints, Category = "Level")
 	int32 AttributePoints = 0;

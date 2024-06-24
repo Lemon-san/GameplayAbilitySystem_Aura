@@ -12,6 +12,12 @@
 #include <AbilitySystem/Data/LevelUpInfo.h>
 #include <NiagaraComponent.h>
 #include <AuraGameplayTags.h>
+#include <Game/AuraGameModeBase.h>
+#include <Kismet/GameplayStatics.h>
+#include "Game/LoadScreenSaveGame.h"
+#include "AbilitySystem/AuraAttributeSet.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
+#include "AbilitySystem/Data/AbilityInfo.h"
 
 AAuraCharacter::AAuraCharacter()
 {
@@ -48,8 +54,58 @@ AAuraCharacter::AAuraCharacter()
 void AAuraCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
+	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
 	InitAbilityActorInfo();
-	AddCharacterAbilities();
+	LoadProgress();
+
+	if (AuraGameMode)
+	{
+		AuraGameMode->LoadWorldState(GetWorld());
+	}
+	
+}
+
+void AAuraCharacter::LoadProgress()
+{
+	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+
+	if (AuraGameMode)
+	{
+		ULoadScreenSaveGame* SaveData = AuraGameMode->RetrieveInGameSaveData();
+		if (!SaveData) return;
+
+		AAuraPlayerState* AuraPlayerState = Cast<AAuraPlayerState>(GetPlayerState());
+		
+		if (SaveData->bFirstTimeLoadIn)
+		{
+			InitializeAttributes();
+			AddCharacterAbilities();
+		}
+
+		else
+		{
+			//INITIALIZES ATTRIBUTES FROM DISK
+
+			UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent);
+			
+			if (AuraASC)
+			{
+				AuraASC->AddCharacterAbilitiesFromSaveData(SaveData);
+			}
+			
+
+			if (AuraPlayerState)
+			{
+				AuraPlayerState->SetLevel(SaveData->PlayerLevel);
+				AuraPlayerState->SetXP(SaveData->XP);
+				AuraPlayerState->SetAttributePoints(SaveData->AttributePoints);
+				AuraPlayerState->SetSpellPoints(SaveData->SpellPoints);
+			}
+
+			UAuraAbilitySystemLibrary::InitializeDefaultAttributesFromSaveData(this, AbilitySystemComponent, SaveData);
+		}
+		
+	}
 }
 
 void AAuraCharacter::OnRep_PlayerState()
@@ -195,6 +251,66 @@ void AAuraCharacter::HideMagicCircle_Implementation()
 	}
 }
 
+void AAuraCharacter::SaveProgress_Implementation(const FName& CheckpointTag)
+{
+	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+	
+	if (AuraGameMode)
+	{
+		ULoadScreenSaveGame* SaveData = AuraGameMode->RetrieveInGameSaveData();
+		if (!SaveData) return;
+
+		SaveData->PlayerStartTag = CheckpointTag;
+
+		AAuraPlayerState* AuraPlayerState = Cast<AAuraPlayerState>(GetPlayerState());
+		if (AuraPlayerState)
+		{
+			SaveData->PlayerLevel = AuraPlayerState->GetPlayerLevel();
+			SaveData->XP = AuraPlayerState->GetPlayerXP();
+			SaveData->AttributePoints = AuraPlayerState->GetAttributePoints();
+			SaveData->SpellPoints = AuraPlayerState->GetSpellPoints();
+		}
+
+		SaveData->Strength = UAuraAttributeSet::GetStrengthAttribute().GetNumericValue(GetAttributeSet());
+		SaveData->Intelligence = UAuraAttributeSet::GetIntelligenceAttribute().GetNumericValue(GetAttributeSet());
+		SaveData->Resilience = UAuraAttributeSet::GetResillienceAttribute().GetNumericValue(GetAttributeSet());
+		SaveData->Vigor = UAuraAttributeSet::GetVigorAttribute().GetNumericValue(GetAttributeSet());
+
+		SaveData->bFirstTimeLoadIn = false;
+
+		if (!HasAuthority()) return;
+
+		UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent);
+		FForEachAbility SaveAbilityDelegate;
+
+		//Clear out Array before we go an call all the lambdas
+		SaveData->SavedAbilities.Empty();
+
+		SaveAbilityDelegate.BindLambda([this, AuraASC, &SaveData](const FGameplayAbilitySpec& AbilitySpec)
+			{
+				
+				UAbilityInfo* AbilityInfo = UAuraAbilitySystemLibrary::GetAbilityInfo(this);
+				const FGameplayTag AbilityTag = AuraASC->GetAbilityTagFromSpec(AbilitySpec);
+				FAuraAbilityInfo AuraAbilityInfo = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
+
+				FSavedAbility SavedAbility;
+				SavedAbility.AbilityTag = AbilityTag;
+				SavedAbility.GameplayAbility = AuraAbilityInfo.Ability;
+				SavedAbility.AbilityLevel = AbilitySpec.Level;
+				SavedAbility.AbilitySlotTag = AuraASC->GetSlotFromAbilityTag(AbilityTag);
+				SavedAbility.AbilityStatusTag = AuraASC->GetStatusFromAbilityTag(AbilityTag);
+				SavedAbility.AbilityTypeTag = AuraAbilityInfo.AbilityTypeTag;
+				
+				SaveData->SavedAbilities.AddUnique(SavedAbility);
+			});
+
+		AuraASC->ForEachAbility(SaveAbilityDelegate);
+
+
+		AuraGameMode->SaveInGameProgressData(SaveData);
+	}
+}
+
 void AAuraCharacter::OnRep_Stunned()
 {
 	UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent);
@@ -237,6 +353,8 @@ void AAuraCharacter::OnRep_Burned()
 		BurnDebuffComponent->Deactivate();
 	}
 }
+
+
 
 void AAuraCharacter::InitAbilityActorInfo()
 {

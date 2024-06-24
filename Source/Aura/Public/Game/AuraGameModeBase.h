@@ -24,6 +24,21 @@ public:
 
 	void TravelToMap(UMVVM_LoadSlot* Slot);
 
+	void SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex);
+
+	static void DeleteSlot(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex);
+
+	ULoadScreenSaveGame* GetSaveSlotData(const FString& SlotName, int32 SlotIndex) const;
+
+	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
+
+	ULoadScreenSaveGame* RetrieveInGameSaveData();
+
+	void SaveInGameProgressData(ULoadScreenSaveGame* SaveObject);
+
+	void SaveWorldState(UWorld* World) const;
+	void LoadWorldState(UWorld* World) const;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Maps")
 	TSoftObjectPtr<UWorld> DefaultMap;
 
@@ -33,6 +48,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Maps")
 	FString DefaultMapName;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Maps")
+	FName DefaultPlayerStartTag;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
 	TObjectPtr<UCharacterClassInfo> CharacterClassInfo;
 
@@ -41,12 +59,6 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<USaveGame> LoadScreenSaveGameClass;
-
-	void SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex);
-
-	static void DeleteSlot(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex);
-
-	ULoadScreenSaveGame* GetSaveSlotData(const FString& SlotName, int32 SlotIndex) const;
 
 protected:
 

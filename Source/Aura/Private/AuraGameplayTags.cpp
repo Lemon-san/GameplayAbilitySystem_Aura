@@ -276,6 +276,12 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 		FName("Abilities.Passive.HaloOfProtection"),
 		FString("HaloOfProtection Ability Tag"));
 
+	//Passive Gameplay Listen Tags
+
+	GameplayTags.Abilities_Passive_ListenForEvent = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Passive.ListenForEvent"),
+		FString("ListenForEvent Gameplay Passive Tag"));
+
 	/*
 	* HitReact
 	*/
