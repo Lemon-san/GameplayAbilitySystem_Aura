@@ -18,6 +18,8 @@
 #include "Actor/MagicCircle.h"
 #include "Components/DecalComponent.h"
 #include <Aura/Aura.h>
+#include <Interaction/HighlightInterface.h>
+
 
 
 
@@ -151,9 +153,9 @@ void AAuraPlayerController::CursorTrace()
 	
 	if (GetAbilitySystemComponent() && GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_CursorTrace))
 	{
-		if (LastActor) LastActor->UnHighlightActor();
-		if (CurrentActor) CurrentActor->UnHighlightActor();
-	
+		UnHightlightActor(LastActor);
+		UnHightlightActor(CurrentActor);
+
 		LastActor = nullptr;
 		CurrentActor = nullptr;
 
@@ -166,19 +168,21 @@ void AAuraPlayerController::CursorTrace()
 	if (!CursorHit.bBlockingHit) return;
 
 	LastActor = CurrentActor;
-	CurrentActor = CursorHit.GetActor();
+
+	if (IsValid(CursorHit.GetActor()) && CursorHit.GetActor()->Implements<UHighlightInterface>())
+	{
+		CurrentActor = CursorHit.GetActor();
+	}
+
+	else
+	{
+		CurrentActor = nullptr;
+	}
 
 	if (LastActor != CurrentActor)
 	{
-		if (LastActor)
-		{
-			LastActor->UnHighlightActor();
-		}
-
-		if (CurrentActor)
-		{
-			CurrentActor->HighlightActor();
-		}
+		UnHightlightActor(LastActor);
+		HightlightActor(CurrentActor);
 	}
 
 }
@@ -192,8 +196,19 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 
 	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
-		bTargetting = CurrentActor ? true : false;
+		if (IsValid(CurrentActor))
+		{
+			TargetingStatus = CurrentActor->Implements<UEnemyInterface>() ? ETargetingStatus::TargetingEnemy : ETargetingStatus::TargetingNonEnemy;
+			
+		}
+
+		else
+		{
+			TargetingStatus = ETargetingStatus::NotTargeting;
+		}
+
 		bAutoRunning = false;
+		
 	}
 
 	if (GetAbilitySystemComponent())
@@ -225,11 +240,20 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		GetAbilitySystemComponent()->AbilityInputTagReleased(InputTag);
 	}
 
-	if (!bTargetting && !bShiftKeyDown)
+	if (TargetingStatus != ETargetingStatus::TargetingEnemy && !bShiftKeyDown)
 	{
 		APawn* ControlledPawn = GetPawn();
 		if (FollowTime <= ShortPressThreshold && ControlledPawn)
 		{
+			if (IsValid(CurrentActor) && CurrentActor->Implements<UHighlightInterface>())
+			{
+				IHighlightInterface::Execute_SetMoveToLocation(CurrentActor, CachedDestination);
+			}
+			else if (ClickNiagaraSystem && GetAbilitySystemComponent() && !GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputPressed))
+			{
+					UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
+			}
+			
 			if (UNavigationPath* NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlledPawn->GetActorLocation(), CachedDestination))
 			{
 				Spline->ClearSplinePoints();
@@ -242,19 +266,12 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 				{
 					CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1];
 					bAutoRunning = true;
-				}
-				
+				}	
 			}
-
-			if (ClickNiagaraSystem && GetAbilitySystemComponent() && !GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputPressed))
-			{
-				UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
-			}
-			
 		}
 
 		FollowTime = 0.f;
-		bTargetting = false;
+		TargetingStatus = ETargetingStatus::NotTargeting;
 	}
 
 }
@@ -275,7 +292,7 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 		return;
 	}
 
-	if (bTargetting || bShiftKeyDown)
+	if (TargetingStatus == ETargetingStatus::TargetingEnemy || bShiftKeyDown)
 	{
 		if (GetAbilitySystemComponent())
 		{
@@ -299,6 +316,22 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 		}
 	}
 
+}
+
+void AAuraPlayerController::HightlightActor(AActor* InActor)
+{
+	if (IsValid(InActor) && InActor->Implements<UHighlightInterface>())
+	{
+		IHighlightInterface::Execute_HighlightActor(InActor);
+	}
+}
+
+void AAuraPlayerController::UnHightlightActor(AActor* InActor)
+{
+	if (IsValid(InActor) && InActor->Implements<UHighlightInterface>())
+	{
+		IHighlightInterface::Execute_UnHighlightActor(InActor);
+	}
 }
 
 void AAuraPlayerController::ShiftPressed()

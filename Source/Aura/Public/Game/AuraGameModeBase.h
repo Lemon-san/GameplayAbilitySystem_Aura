@@ -8,6 +8,7 @@
 
 class UCharacterClassInfo;
 class UAbilityInfo;
+class ULootTiersInfo;
 class UMVVM_LoadSlot;
 class USaveGame;
 class ULoadScreenSaveGame;
@@ -36,8 +37,10 @@ public:
 
 	void SaveInGameProgressData(ULoadScreenSaveGame* SaveObject);
 
-	void SaveWorldState(UWorld* World) const;
+	void SaveWorldState(UWorld* World, const FString& DestinationMapAssetName = FString("")) const;
 	void LoadWorldState(UWorld* World) const;
+
+	void PlayerDied(ACharacter* DeadCharacter);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Maps")
 	TSoftObjectPtr<UWorld> DefaultMap;
@@ -51,14 +54,20 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Maps")
 	FName DefaultPlayerStartTag;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<USaveGame> LoadScreenSaveGameClass;
+
+	/*Data Assets*/
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
 	TObjectPtr<UCharacterClassInfo> CharacterClassInfo;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Ability Info")
 	TObjectPtr<UAbilityInfo> AbilityInfo;
 
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<USaveGame> LoadScreenSaveGameClass;
+	UPROPERTY(EditDefaultsOnly, Category = "LootTiers Info")
+	TObjectPtr<ULootTiersInfo> LootTiersInfo;
+
+	FString GetMapNameFromMapAssetName(const FString& MapAssetName) const;
 
 protected:
 

@@ -97,6 +97,7 @@ protected:
 
 	void AddCharacterAbilities();
 
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	bool bDead = false;
 
 	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
@@ -202,5 +203,8 @@ private:
 
 public:
 
+	void SetCharacterClass(ECharacterClass InClass) { CharacterClass = InClass; }
+
 	FORCEINLINE UAttributeSet* GetAttributeSet() const { return AttributeSet; }
+	
 };

@@ -7,6 +7,7 @@
 #include <Game/AuraGameModeBase.h>
 #include <Kismet/GameplayStatics.h>
 
+
 AAuraCheckpoint::AAuraCheckpoint(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 
@@ -16,6 +17,8 @@ AAuraCheckpoint::AAuraCheckpoint(const FObjectInitializer& ObjectInitializer) : 
 	CheckpointMesh->SetupAttachment(GetRootComponent());
 	CheckpointMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	CheckpointMesh->SetCollisionResponseToAllChannels(ECR_Block);
+	CheckpointMesh->SetCustomDepthStencilValue(CustomDepthStencilOverride);
+	CheckpointMesh->MarkRenderStateDirty();
 
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
 	Sphere->SetupAttachment(CheckpointMesh);
@@ -23,6 +26,11 @@ AAuraCheckpoint::AAuraCheckpoint(const FObjectInitializer& ObjectInitializer) : 
 	Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	Sphere->SetCollisionResponseToAllChannels(ECR_Ignore);
 	Sphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+
+	MoveToComponent = CreateDefaultSubobject<USceneComponent>("MoveToComponent");
+	MoveToComponent->SetupAttachment(GetRootComponent());
+
+
 }
 
 bool AAuraCheckpoint::ShouldLoadTransform_Implementation()
@@ -38,11 +46,34 @@ void AAuraCheckpoint::LoadActor_Implementation()
 	}
 }
 
+void AAuraCheckpoint::SetMoveToLocation_Implementation(FVector& OutDestination)
+{
+	OutDestination = MoveToComponent->GetComponentLocation();
+}
+
+void AAuraCheckpoint::HighlightActor_Implementation()
+{
+	if (!bReached)
+	{
+		CheckpointMesh->SetRenderCustomDepth(true);
+	}
+	
+}
+
+void AAuraCheckpoint::UnHighlightActor_Implementation()
+{
+	CheckpointMesh->SetRenderCustomDepth(false);
+}
+
 void AAuraCheckpoint::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AAuraCheckpoint::OnSphereOverlap);
+	if (bBindOverlapCallback)
+	{
+		Sphere->OnComponentBeginOverlap.AddDynamic(this, &AAuraCheckpoint::OnSphereOverlap);
+	}
+	
 }
 
 void AAuraCheckpoint::HandleGlowEffect()
@@ -63,7 +94,12 @@ void AAuraCheckpoint::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 		AAuraGameModeBase* AuraGM = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
 		if (AuraGM)
 		{
-			AuraGM->SaveWorldState(GetWorld());
+			const UWorld* World = GetWorld();
+			FString MapName = World->GetMapName();
+			MapName.RemoveFromStart(World->StreamingLevelsPrefix);
+
+
+			AuraGM->SaveWorldState(GetWorld(), MapName);
 		}
 
 		IPlayerInterface::Execute_SaveProgress(OtherActor, PlayerStartTag);

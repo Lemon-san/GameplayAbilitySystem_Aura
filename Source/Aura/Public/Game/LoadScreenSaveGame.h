@@ -72,7 +72,7 @@ struct FSavedAbility
 	FGameplayTag AbilityTypeTag = FGameplayTag();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Class Defaults")
-	int32 AbilityLevel = 0;
+	int32 AbilityLevel = 1;
 };
 
 //Overload SavedAbility
@@ -106,6 +106,9 @@ public:
 
 	UPROPERTY()
 	FString MapName = FString("Default Map Name");
+
+	UPROPERTY()
+	FString MapAssetName = FString("Default Map Asset Name");
 
 	UPROPERTY()
 	TEnumAsByte<ESaveSlotStatus> SaveSlotStatus = Vacant;

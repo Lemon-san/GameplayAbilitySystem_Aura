@@ -5,7 +5,9 @@
 #include "CoreMinimal.h"
 #include "Character/AuraCharacterBase.h"
 #include "Interaction/PlayerInterface.h"
+#include <Math/MathFwd.h>
 #include "AuraCharacter.generated.h"
+
 
 
 class UCameraComponent;
@@ -31,7 +33,13 @@ public:
 
 	/** Combat Interface*/
 	virtual int32 GetPlayerLevel_Implementation() override;
+	virtual void Die(const FVector& DeathImpulse) override;
 	/**End CombatInterface */
+
+	UPROPERTY(EditDefaultsOnly, Category = "Death Properties")
+	float DeathTime = 5.f;
+
+	FTimerHandle DeathTimer;
 
 	/**Player Interface*/
 	virtual void AddToXP_Implementation(int32 InXP) override;

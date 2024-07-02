@@ -31,6 +31,9 @@ public:
 	UPROPERTY()
 	TEnumAsByte<ESaveSlotStatus> SlotStatus;
 
+	UPROPERTY()
+	FString MapAssetName;
+
 	//Delegates
 
 	UPROPERTY(BlueprintAssignable)

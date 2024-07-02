@@ -8,9 +8,9 @@
 #include "AuraPlayerController.generated.h"
 
 
+
 class UInputMappingContext;
 class UInputAction;
-class IEnemyInterface;
 struct FInputActionValue;
 class UAuraInputConfig;
 class UAuraAbilitySystemComponent;
@@ -18,6 +18,15 @@ class USplineComponent;
 class UNiagaraSystem;
 class UDamageTextComponent;
 class AMagicCircle;
+class IHighlightInterface;
+
+UENUM(BlueprintType)
+enum class ETargetingStatus : uint8
+{
+	TargetingEnemy,
+	TargetingNonEnemy,
+	NotTargeting
+};
 /**
  * 
  */
@@ -54,6 +63,9 @@ private:
 	void AbilityInputTagReleased(FGameplayTag InputTag);
 	void AbilityInputTagHeld(FGameplayTag InputTag);
 
+	static void HightlightActor(AActor* InActor);
+	static void UnHightlightActor(AActor* InActor);
+
 	void ShiftPressed();
 	void ShiftReleased();
 	bool bShiftKeyDown = false;
@@ -64,8 +76,10 @@ private:
 
 	UAuraAbilitySystemComponent* GetAbilitySystemComponent();
 
-	TScriptInterface<IEnemyInterface> LastActor;
-	TScriptInterface<IEnemyInterface> CurrentActor;
+	//TScriptInterface<IHighlightInterface> LastActor;
+	//TScriptInterface<IHighlightInterface> CurrentActor;
+	TObjectPtr<AActor> LastActor;
+	TObjectPtr<AActor> CurrentActor;
 	FHitResult CursorHit;
 
 	UPROPERTY(EditAnywhere, Category = "Inputs")
@@ -88,7 +102,7 @@ private:
 	float FollowTime = 0.f;
 	float ShortPressThreshold = 0.5f;
 	bool bAutoRunning = false;
-	bool bTargetting = false;
+	ETargetingStatus TargetingStatus = ETargetingStatus::NotTargeting;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float AutoRunAcceptanceRadius = 50.f;
